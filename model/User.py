@@ -1,14 +1,11 @@
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy import Column, Integer, String
+from config import dbconfig
 from sqlalchemy.ext.declarative import declarative_base
 
-
-engine = create_engine('postgresql+pg8000://postgres:docker@localhost:5433/chat', convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         bind=engine))
-
 Base = declarative_base()
-Base.query = db_session.query_property()
+connection = dbconfig.connection()
+Base.query = connection.query_property()
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -22,15 +19,11 @@ class User(Base):
 
     def save(self):
         try:
-            db_session.add(self)
-            db_session.commit()
+            connection.add(self)
+            connection.commit()
         except:
-            db_session.rollback()
+            connection.rollback()
             raise
 
-
-def init_db():
-    Base.metadata.create_all(bind=engine)
-
 if __name__ == '__main__':
-    init_db()
+    dbconfig.createTables(Base)
