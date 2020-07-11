@@ -1,14 +1,12 @@
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Api
+from controllers.user_controller import UserController
 
 app = Flask(__name__)
 api = Api(app)
 
-class InitialRoute(Resource):
-    def get(self):
-        return {'Message': 'It works'}
 
-api.add_resource(InitialRoute, '/')
+api.add_resource(UserController, '/')
 
 if __name__ == '__main__':
     app.run(debug=True)
