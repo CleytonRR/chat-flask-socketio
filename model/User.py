@@ -12,7 +12,7 @@ class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     name = Column(String(40), index=True, nullable=False)
-    email = Column(String(80), nullable=False)
+    email = Column(String(80), nullable=False, unique=True)
     password = Column(String(128), nullable=False)
 
     def __repr__(self):
